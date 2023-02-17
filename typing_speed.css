@@ -1,142 +1,121 @@
-body{
-    margin: 0;
-   height: 100vh;
-    background-color: blueviolet;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-.text-area{
-    font-weight:600;
-}
-body,.type-area,.text-area{
-    font-family: 'Courier New', Courier, monospace;
-}
-.container{
-    background-color: #23C4ED;
-    padding: 1rem;
-    width: 500px;
-    border: 3px solid black;
-    max-width: 90%;
-    border-radius: 20px;
-    border: 2px solid black;
-}
-.text-area{
-    margin-bottom: 1rem;
-    margin-left: calc(1rem + 2px);
-    margin-right: calc(1rem + 2px);
-}
-.type-area{
-    background-color: transparent;
-    border: 2px solid blueviolet;
-    outline: none;
-    width: 93%;
-    height: 8rem;
-    margin: auto;
-    resize: none;
-    padding: .5rem 1rem;
-   font-size: 1rem;
-   border-radius: .5rem;   
-}
-.type-area:focus{
-    border:3px solid black;
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    letter-spacing: 1px;
 }
 
-.correct{
-    color:green;
-}
-.incorrect{
-    color:red;
-    text-decoration:underline;
-}
-.upperbody{
-    color:white;
-    position: absolute;
-    top:0.5rem;
-    font-size: 2rem;
-    font-weight: bold;
-    flex-direction: column;
-}
-#score{
-    position: relative;
-   
-    font-size: 45px;
-}
-#timer{
-    position: relative;
-    font-size: 45px;
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-}
-.display-score{
-    font-size: 30px;
-    background-color: rgba(92, 86, 86, 0.9);
-    color:white;
-    width: 100%;
-    height:100%;
-    position: absolute;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-.show{
-    display: flex;
-}
-.btn{
-    font-size:20px;
-    font-weight: 300;
-    color:#9c11ff;
-    padding:0.5em 1.5em;
-    border:5px solid #9c11ff;
-    outline: 5px solid #9c11ff;
-    outline-offset: -5px;
-    cursor: pointer;
-    transition: outline-offset 250ms ease;
-}
-.btn:hover{
-    outline-offset:-10px  ;
-}
-.starting
-{
-    position: absolute;
-    display: flex;
+body{
     width: 100vw;
-    height: 100vh;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(92, 86, 86, 0.9) ;
-    color:white;
-}
-.text{
-    position: relative;
-    width:90vw;
-    font-size: 20px;
-    font-weight: 500;
+    min-height: 100vh;
+    background-color: #FAFAFA;
+
     display: flex;
-    line-height: 30px;
+    flex-direction: column;
+    align-items: center;
+    font-family: Roboto,Helvetica Neue,sans-serif;
+
+}
+
+.header{
+    width: 100%;
+    display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 50px;
+
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+
+    letter-spacing:5px;
+    padding: 24px;
+    background-color: #007BFF;
+
 }
-.starting_hidden{
-    display: none;
+
+.container{
+    width: 60%;
+    margin-top: 60px;
+    min-height: 500px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+
+    padding: 24px 20px;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
 }
-.startbtn{
-    font-size:20px;
-    font-weight: 300;
-    color:#9c11ff;
-    padding:0.5em 1.5em;
-    border:5px solid #9c11ff;
-    outline: 5px solid #9c11ff;
-    outline-offset: -5px;
+.quote-area{
+    width: 100%;
+    font-size: 28px;
+    line-height: 32px;
+    padding: 20px 0px;
+    border-bottom: 1px solid gray;
+}
+
+.quote-area .wrong{
+    color:red;
+}
+
+.quote-area > span{
+    padding: 0px 1px;
+    color: black;
+}
+
+.quote-area > .not-touched{
+    color:#d3d3d3;
+}
+
+.quote-area > .active{
+    color: black;
+    animation: blink 1s infinite ;
+}
+
+.action-buttons{
+    margin-top: 30px;
+}
+
+.action-buttons > button{
+    background-color: #007BFF;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 10px;
     cursor: pointer;
-    transition: outline-offset 250ms ease;
+    font-size: 14px;
+    font-weight: 600;
 }
-.startbtn:hover{
-    outline-offset:-10px  ;
+
+.progress-bar{
+    width: 0%;
+    height: 5px;
+    background-color: #007BFF;
+    margin-top: 15px;
+}
+.display-result{
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items: center;
+    padding: 24px 10px;
+}
+
+.display-score{
+    color: green;
+    font-size: 22px;
+}
+
+.display-error{
+    color: red;
+    font-size: 22px;
+}
+@keyframes blink {
+    0%, 49% {
+        background-color: #007BFF;
+        color: #fff;
+    }
+    50%, 100% {
+        background-color:transparent
+    }
 }

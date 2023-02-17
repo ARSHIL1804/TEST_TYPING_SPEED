@@ -1,101 +1,145 @@
-const api_url='https://api.quotable.io/random';
-const text_area=document.getElementById('text-area')
-const type_area=document.getElementById('type-area')
-let score=0;
-const scorre_id=document.getElementById('score');
-const timer_id=document.getElementById('timer');
-let display_score=document.getElementById('display-score');
-const btn=document.getElementById('btn');
-const starting=document.getElementById('starting');
+const api_url = 'https://api.quotable.io/random';
+const quote_area = document.getElementById('quote-area');
 
-type_area.addEventListener('input',()=>{
-   const char_array=text_area.querySelectorAll('span');
-   const char_array_input=type_area.value.split('');
-   let correct=0;
-   char_array.forEach((charspan,index)=>{
-       const char=char_array_input[index];
-       if(char==null)
-       {
-          charspan.classList.remove('incorrect');
-          charspan.classList.remove('correct');
+const startTypingButton = document.getElementById('startTyping');
+const stopTypingButton = document.getElementById('stopTyping');
 
-       }
-      else if(char===charspan.innerText)
-       {
-            charspan.classList.add('correct');
-           charspan.classList.remove('incorrect');
-           correct++; 
-       }
-      else 
-       {
-           charspan.classList.add('incorrect');
-           charspan.classList.remove('correct');
-           correct--;
-       }
-   })
-   if(correct==char_array.length)
-   {
-       score++;
-       scorre_id.innerHTML="SCORE:"+score;
-       quoteloop();
-   }
-})
+const display_result = document.getElementById('display-result');
+const display_score = document.getElementById('display-score');
+const display_error = document.getElementById('display-error');
 
+const progress_bar = document.getElementById('progress-bar');
 
-async function getquote()
-{
- return fetch(api_url)
- .then(promise => promise.json())
- .then(quote => quote.content)
+let cur_index = 0;
+let seconds = 0;
+let chars;
+let typingMode = false;
+let errors = 0;
+let progress = 0;
+
+document.onload = setup() ;
+
+async function getRandomQuote() {
+    return fetch(api_url)
+    .then(promise => promise.json())
+    .then(quote => quote.content)
 }
 
-async function quoteloop()
-{
-    const quote=await getquote();
-    text_area.innerHTML='';
+
+async function setup() {
+    typingMode = false;
+
+    cur_index = 0;
+    seconds = 0;
+    chars = [];
+    typingMode = false;
+    errors = 0;
+    progress = 0;
+
+    startTypingButton.style.display = 'unset';
+    stopTypingButton.style.display = 'none';
+
+    quote_area.innerHTML='';
+    
+    let quote = await  getRandomQuote();
     quote.split('').forEach(char => {
-        const characterspan=document.createElement('span');
-        characterspan.innerText=char;
-        text_area.appendChild(characterspan);
+        let char_element = document.createElement('span');
+        char_element.innerHTML=char;
+        char_element.classList.add('quote-char-span');
+        quote_area.appendChild(char_element)
     });
-    type_area.value=null;
-}
-function timer()
-{
-    let sec=60;
-    let ineterval=setInterval(function(){
-        timer_id.innerText=sec;
-        sec--;
-        if(sec==-1)
-        {  
-           display_score.classList.add("show");
-           display_score.innerHTML+="<pre>"+"Opps ! Times Up"+"<br/>"+"    SCORE:"+score+"</pre>";
-            createButton();
-           clearInterval(ineterval);
-        }
-    },1000);
 }
 
-function createButton()
-{
-           var btn= document.createElement("button");
-           btn.innerHTML="Restart";
-           display_score.appendChild(btn);
-           btn.classList.add('btn');
-           btn.id='btn';
-           btn.addEventListener('click',last);
+
+function setupAreaForTyping(){
+    let chars = document.getElementsByClassName('quote-char-span');
+    for(ch of chars)
+    {
+        ch.classList.add('not-touched');
+    }
 }
 
-function last()
-{
-    display_score.innerHTML="";
-    display_score.classList.remove('show');
-    scorre_id.innerHTML="SCORE:"+0;
-    start();
+function startTyping(){
+    hideResult();
+    startTypingButton.style.display = 'none';
+    stopTypingButton.style.display = 'unset';
+
+    cur_index = 0;
+    typingMode = true;
+
+    setupAreaForTyping();
+
+    chars = document.getElementsByClassName('quote-char-span');
+    chars[cur_index].classList.remove('not-touched');
+    chars[cur_index].classList.add('active');
+
+    startTimer();
 }
-function start(){
-score=0;
-starting.classList.add('starting_hidden')
-quoteloop();
-timer();
+
+function startTimer() {
+    seconds = 0;
+    ineterval = setInterval(function () {
+        seconds++;
+    }, 1000);
+}
+
+
+onkeyup = (event)=>{
+    event.target.blur();
+    if(!typingMode)return;
+    let key = event.key;
+    let keyCode = event.keyCode;
+    if( !(key == " ") &&  !(keyCode>=48 && keyCode<=57) && !(keyCode>=65 && keyCode<=90) && !(keyCode>=96 && keyCode<=111) && !(keyCode>=186 && keyCode<=222) )return;
+    if(chars)
+    {
+
+       if(event.key === chars[cur_index].innerHTML)
+       {
+            setProgress();
+            chars[cur_index].classList.remove('active');
+            cur_index++;
+            if(cur_index < chars.length)
+            {
+            chars[cur_index].classList.remove('not-touched');
+            chars[cur_index].classList.add('active');
+            }
+            else{
+                displayResult();
+            }
+       }
+       else
+       {
+         chars[cur_index].classList.add('wrong');
+         errors++;
+         console.log(errors);
+       }
+
+    }
+}
+
+function setProgress(){
+    progress += (100/chars.length);
+    progress_bar.style.width = progress+"%";
+
+    console.log(progress);
+
+}
+
+function stopTyping(){
+    setup();
+}
+
+function displayResult(){
+    clearInterval(ineterval);
+    let speed = Math.floor( (chars.length * 60) / seconds );
+   
+    display_result.style.display = 'flex';
+    display_score.innerHTML = "Your speed is " + speed + " char per minute"
+    display_error.innerHTML = "Total error : " + errors; 
+
+    setup();
+}
+
+function hideResult(){
+    display_result.style.display = 'none';
 }

@@ -6,27 +6,30 @@
             TYPING SPEED
         </title>
         <link href="typing_speed.css" rel="stylesheet" ></link>
-        
     </head>
     <body>
-        <div class="starting" id="starting">
-               <div class="text">
-                Hey There, I have created an interesting website to check your typing speed.
-                SO here  you will be given quotes one after another.Type maximum quotes you can type.Only 1 minute will be given to you.
-                You can start by clicking below button.
-               </div>
-               <button class="startbtn" onclick="start()">Start</button>
-        </div>
-        <div class="display-score" id="display-score">  
-        </div>
-        <div class="upperbody">
-
-             <div id="score">SCORE:0</div>
-             <div id="timer"></div>
+        <div class="header">
+            Typing Speed
         </div>
         <div class="container">
-            <div id="text-area" class="text-area" style="user-select: none;"></div>
-           <textarea class="type-area" id="type-area" autofocus></textarea>
+            <div class="quote-area" id="quote-area">
+
+            </div>
+
+            <div class="action-buttons" >
+                <button id="startTyping"  onclick="startTyping()" > Start Typing ...</button>
+                <button id="stopTyping"   onclick="stopTyping()" > Stop Typing ...</button>
+            </div>
+
+            <div id="display-result" class="display-result">
+                <div id="display-score" class="display-score"></div>
+                <div id="display-error" class="display-error"></div>
+            </div>
+
+            <div id="progress-bar" class="progress-bar">
+
+            </div>
+            
         </div>
         <script src="typing_speed.js"></script>
        
